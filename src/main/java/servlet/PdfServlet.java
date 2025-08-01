@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import service.PdfService;
 
 // Este servlet vai "escutar" na URL "/download-pdf"
-@WebServlet("/download-pdf")
+//@WebServlet("/download-pdf")//
 public class PdfServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 

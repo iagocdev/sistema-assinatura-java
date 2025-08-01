@@ -16,7 +16,7 @@ import util.JwtUtil;
 
 // A anotação @WebServlet é a forma moderna de mapear uma URL para o seu servlet.
 // Qualquer requisição para "/login" será direcionada para esta classe.
-@WebServlet("/login")
+//@WebServlet("/login")//
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
