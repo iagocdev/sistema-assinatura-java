@@ -14,7 +14,7 @@ public class PdfTest {
         System.out.println("Gerando PDF de teste...");
 
         // 2. Chama o método para criar o PDF em memória.
-        ByteArrayOutputStream pdfStream = pdfService.createSimplePdf(
+        ByteArrayOutputStream pdfStream = pdfService.createSignedPdf(
             "Meu Primeiro Documento",
             "Este é um documento de teste gerado pelo sistema DocuFlow. " +
             "O conteúdo foi criado dinamicamente usando a biblioteca OpenPDF em Java."

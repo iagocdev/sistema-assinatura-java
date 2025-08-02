@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import config.DatabaseConnection;
 import model.DocumentTemplate;
 import java.util.List;
+import java.util.Optional;
 import java.util.ArrayList;
 import java.sql.ResultSet;
 
@@ -70,4 +71,55 @@ public class DocumentTemplateDAO {
      
      return templates;
  }
+
+	/**
+	* Deleta um template do banco de dados pelo seu ID.
+	* @param templateId O ID do template a ser deletado.
+	*/
+	public void delete(int templateId) {
+	  String sql = "DELETE FROM document_templates WHERE id = ?";
+	
+	  try (Connection conn = DatabaseConnection.getConnection();
+	       PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	
+	      pstmt.setInt(1, templateId);
+	      pstmt.executeUpdate();
+	
+	  } catch (SQLException e) {
+	      System.err.println("Erro ao deletar o template de documento: " + e.getMessage());
+	      e.printStackTrace();
+	  }
+	}
+	/**
+	 * Busca um template de documento específico pelo seu ID.
+	 * @param templateId O ID do template.
+	 * @return um Optional contendo o DocumentTemplate se encontrado, ou vazio.
+	 */
+	public Optional<DocumentTemplate> findById(int templateId) {
+	    String sql = "SELECT * FROM document_templates WHERE id = ?";
+	    
+	    try (Connection conn = DatabaseConnection.getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        
+	        pstmt.setInt(1, templateId);
+	        
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                DocumentTemplate template = new DocumentTemplate();
+	                template.setId(rs.getInt("id"));
+	                template.setTemplateName(rs.getString("template_name"));
+	                template.setFilePath(rs.getString("file_path"));
+	                template.setUploadedByUserId(rs.getInt("uploaded_by_user_id"));
+	                template.setCreatedAt(rs.getTimestamp("created_at").toInstant());
+	                
+	                return Optional.of(template);
+	            }
+	        }
+	    } catch (SQLException e) {
+	        System.err.println("Erro ao buscar template por ID: " + e.getMessage());
+	        e.printStackTrace();
+	    }
+	    
+	    return Optional.empty();
+	}
 }
