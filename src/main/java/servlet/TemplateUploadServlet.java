@@ -10,8 +10,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import model.DocumentTemplate;
+import model.User;
 
 // A anotação @WebServlet mapeia esta classe para a URL "/upload-template"
 //@WebServlet("/upload-template")//
@@ -61,11 +63,16 @@ public class TemplateUploadServlet extends HttpServlet {
         newTemplate.setTemplateName(templateName);
         newTemplate.setFilePath(filePath);
         
-        // NOTA: Ainda não temos um sistema de sessão para saber QUEM está logado.
-        // Por enquanto, vamos "fingir" que é sempre o usuário com ID = 1.
-        // Faremos a integração com o JWT mais tarde.
-        int loggedInUserId = 1; // HARDCODED por enquanto
-        newTemplate.setUploadedByUserId(loggedInUserId);
+        // Pega o usuário da sessão.
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            // Se não houver usuário logado, redireciona para o login.
+            response.sendRedirect("login.html?error=session");
+            return; // Para a execução do método.
+        }
+
+        User loggedInUser = (User) session.getAttribute("user");
+        newTemplate.setUploadedByUserId(loggedInUser.getId());
         
         templateDAO.save(newTemplate);
         
