@@ -12,11 +12,11 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">DocuFlow</a>
+            <a class="navbar-brand" href="#">DocFlow</a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Iago Desenvolvedor</a>
+                        <a class="nav-link" href="#">Gestão de documentos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="logout">
@@ -91,7 +91,7 @@
 
         // --- FUNÇÃO PARA CARREGAR OS TEMPLATES ---
         function loadTemplates() {
-            fetch('/docflow-web/list-templates')
+        	fetch('/docflow-web/list-templates', { credentials: 'include' })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Erro na rede ou usuário não autorizado.');
