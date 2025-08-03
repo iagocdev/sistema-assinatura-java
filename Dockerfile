@@ -2,20 +2,19 @@
 FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY pom.xml .
+RUN mvn dependency:go-offline
+COPY src ./src
 RUN mvn clean package
+
+# ----- LINHA DE DEPURAÇÃO ADICIONADA ABAIXO -----
+# Lista o conteúdo do .war gerado para podermos ver no log do deploy.
+RUN unzip -l /app/target/docflow-web.war
 
 # Estágio 2: Imagem Final com Tomcat
 FROM tomcat:10.1-jdk17
-WORKDIR /usr/local/tomcat/webapps
 
-# Remove o conteúdo padrão do Tomcat.
-RUN rm -rf ROOT
+# Copia o .war gerado para a pasta webapps do Tomcat, renomeando para ROOT.war
+COPY --from=build /app/target/docflow-web.war /usr/local/tomcat/webapps/ROOT.war
 
-# Copia o arquivo .war que o Maven gerou para a pasta de webapps do Tomcat.
-COPY --from=build /app/target/docflow-web.war .
-
-# Expõe a porta 8080.
 EXPOSE 8080
-
-# Comando para iniciar o Tomcat.
 CMD ["catalina.sh", "run"]

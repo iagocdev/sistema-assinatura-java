@@ -72,10 +72,13 @@
         <finalName>docflow-web</finalName>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.2</version>
-            </plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-war-plugin</artifactId>
+    <version>3.3.2</version>
+    <configuration>
+        <warSourceDirectory>src/main/webapp</warSourceDirectory>
+    </configuration>
+</plugin>
 
         </plugins>
     </build>
