@@ -26,18 +26,19 @@ public class ListTemplatesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
+        System.out.println("--- DENTRO DO ListTemplatesServlet ---");
         HttpSession session = request.getSession(false);
         
         if (session != null && session.getAttribute("user") != null) {
             User loggedInUser = (User) session.getAttribute("user");
+            System.out.println("Usuário da sessão encontrado: " + loggedInUser.getName());
+            System.out.println(">>> ID DO USUÁRIO SENDO USADO NA BUSCA: " + loggedInUser.getId());
             
             DocumentTemplateDAO templateDAO = new DocumentTemplateDAO();
             List<DocumentTemplate> templates = templateDAO.findByUserId(loggedInUser.getId());
+            System.out.println(">>> Templates encontrados no banco para este ID: " + templates.size());
             
-            // Vamos criar uma lista de mapas para ter controle sobre o formato dos dados
             List<Map<String, Object>> templateData = new ArrayList<>();
-            
-            // Define o formato de data que queremos: dd/MM/yyyy
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                                                      .withZone(ZoneId.systemDefault());
 
@@ -45,10 +46,7 @@ public class ListTemplatesServlet extends HttpServlet {
                 Map<String, Object> data = new HashMap<>();
                 data.put("id", template.getId());
                 data.put("templateName", template.getTemplateName());
-                
-                // Formata a data 'Instant' para a String 'dd/MM/yyyy' antes de enviar
                 data.put("createdAt", formatter.format(template.getCreatedAt()));
-                
                 templateData.add(data);
             }
             
@@ -60,6 +58,7 @@ public class ListTemplatesServlet extends HttpServlet {
             response.getWriter().write(jsonTemplates);
             
         } else {
+            System.out.println("ERRO: Sessão ou usuário não encontrado no ListTemplatesServlet.");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("{\"error\": \"Usuário não autenticado\"}");
         }
