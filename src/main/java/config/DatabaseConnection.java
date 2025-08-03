@@ -7,25 +7,24 @@ import java.sql.SQLException;
 public class DatabaseConnection {
 
     public static Connection getConnection() {
+        // MENSAGEM DE TESTE - VERSÃO MAIS RECENTE
+        System.out.println(">>> EXECUTANDO DatabaseConnection - VERSAO CORRIGIDA COM 3 PARAMETROS <<<");
+        
         Connection conn = null;
         try {
             Class.forName("org.postgresql.Driver");
             
-            // Lemos as três variáveis de ambiente separadamente
             String dbUrl = System.getenv("JDBC_DATABASE_URL");
             String user = System.getenv("JDBC_DATABASE_USERNAME");
             String password = System.getenv("JDBC_DATABASE_PASSWORD");
 
-            // Lógica para ambiente local continua a mesma
             if (dbUrl == null || dbUrl.isEmpty()) {
                 System.out.println("Variáveis de ambiente não encontradas, usando configuração local.");
                 dbUrl = "jdbc:postgresql://localhost:5432/docflow";
-                user = "doc_user"; // Seu usuário local
-                password = "sua_senha_local"; // Sua senha local
+                user = "doc_user";
+                password = "sua_senha_local"; // Lembre-se de usar sua senha local aqui
             }
 
-            // A MUDANÇA ESTÁ AQUI: Passamos a URL, o usuário e a senha como
-            // argumentos separados para o DriverManager.
             conn = DriverManager.getConnection(dbUrl, user, password);
 
         } catch (ClassNotFoundException e) {
