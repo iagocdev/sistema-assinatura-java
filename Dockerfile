@@ -6,10 +6,6 @@ RUN mvn dependency:go-offline
 COPY src ./src
 RUN mvn clean package
 
-# ----- LINHA DE DEPURAÇÃO ADICIONADA ABAIXO -----
-# Lista o conteúdo do .war gerado para podermos ver no log do deploy.
-RUN unzip -l /app/target/docflow-web.war
-
 # Estágio 2: Imagem Final com Tomcat
 FROM tomcat:10.1-jdk17
 
